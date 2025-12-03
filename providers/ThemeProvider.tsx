@@ -1,5 +1,5 @@
 import { themes } from "@/constants/color-theme"
-import { useSettingsStore } from "@/stores/useSettingsStore"
+import { useSettingsStore } from "@/stores/settingsStore"
 import { StatusBar } from "expo-status-bar"
 import { colorScheme } from "nativewind"
 import React, { createContext, useContext, useEffect, useState } from "react"

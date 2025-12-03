@@ -1,20 +1,37 @@
-import { useBootstrapApp } from "@/hooks/useBootStrapApp"
+import { useBootstrapApp } from "@/hooks/useBootstrapApp"
 import { ThemeProvider } from "@/providers/ThemeProvider"
-import { useFonts } from "expo-font"
+import {
+	Inter_400Regular,
+	Inter_500Medium,
+	Inter_600SemiBold,
+	Inter_700Bold,
+	useFonts,
+} from "@expo-google-fonts/inter"
+import {
+	Poppins_400Regular,
+	Poppins_500Medium,
+	Poppins_600SemiBold,
+	Poppins_700Bold,
+} from "@expo-google-fonts/poppins"
 import { Stack } from "expo-router"
 import { ActivityIndicator, Text, View } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import "./global.css"
 
 function App() {
-	const { ready, error } = useBootstrapApp()
+	const { isAuthenticated, ready, error } = useBootstrapApp()
 
 	const [loaded] = useFonts({
-		Inter: require("@/assets/fonts/Inter-Regular.ttf"),
-		Poppins: require("@/assets/fonts/Poppins-Regular.ttf"),
-		"Poppins-Bold": require("@/assets/fonts/Poppins-Bold.ttf"),
-		Satoshi: require("@/assets/fonts/Satoshi-Regular.ttf"),
-		SpaceMono: require("@/assets/fonts/SpaceMono-Regular.ttf"),
+		Inter_400Regular,
+		Inter_500Medium,
+		Inter_600SemiBold,
+		Inter_700Bold,
+		Poppins_400Regular,
+		Poppins_500Medium,
+		Poppins_600SemiBold,
+		Poppins_700Bold,
+		Inter: Inter_600SemiBold,
+		Poppins: Poppins_600SemiBold,
 	})
 
 	if (!ready || !loaded) {
@@ -37,8 +54,11 @@ function App() {
 
 	return (
 		<Stack>
-			<Stack.Protected guard={true}>
-				{/* <Stack.Screen name="index" options={{ headerShown: false, animation: "none" }} /> */}
+			<Stack.Protected guard={isAuthenticated}>
+				<Stack.Screen name="(protected)" options={{ headerShown: false, animation: "default" }} />
+			</Stack.Protected>
+			<Stack.Protected guard={!isAuthenticated}>
+				<Stack.Screen name="signup" options={{ headerShown: false, animation: "none" }} />
 				<Stack.Screen name="login" options={{ headerShown: false, animation: "none" }} />
 			</Stack.Protected>
 		</Stack>
