@@ -23,16 +23,16 @@ function getColorFromName(name: string) {
 	return COLORS[Math.abs(hash) % COLORS.length]
 }
 
-export default function FallbackAvatar({ name }: { name: string }) {
+export default function FallbackAvatar({ name, size = 12 }: { name: string; size?: number }) {
 	const letter = name?.charAt(0)?.toUpperCase() || "?"
 	const bg = getColorFromName(name || "Unknown")
 
 	return (
 		<View
 			style={{ backgroundColor: bg }}
-			className="w-12 h-12 rounded-full justify-center items-center"
+			className={`w-${size} h-${size} rounded-full justify-center items-center`}
 		>
-			<Text className="text-white text-xl font-semibold">{letter}</Text>
+			<Text className="text-white text-3xl font-poppins-semibold">{letter}</Text>
 		</View>
 	)
 }

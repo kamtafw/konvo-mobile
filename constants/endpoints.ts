@@ -23,6 +23,7 @@ export const ENDPOINTS = {
 	LIST_FRIENDS: "friends/",
 	SEND_REQUEST: "friends/request/",
 	LIST_REQUESTS: "friends/requests/",
+	LIST_SUGGESTIONS: "friends/suggestions/",
 	ACCEPT_REQUEST: (id: string) => `friends/accept/${id}/`,
 	REJECT_REQUEST: (id: string) => `friends/reject/${id}/`,
 }

@@ -23,7 +23,8 @@ module.exports = {
 			fontFamily: {
 				inter: ["Inter_400Regular", "Inter_500Medium", "Inter_600SemiBold", "sans-serif"],
 				"inter-bold": ["Inter_700Bold", "sans-serif"],
-				poppins: ["Poppins_400Regular", "Poppins_500Medium", "Poppins_600SemiBold", "sans-serif"],
+				poppins: ["Poppins_400Regular", "Poppins_500Medium", "sans-serif"],
+				"poppins-semibold": ["Poppins_600SemiBold", "sans-serif"],
 				"poppins-bold": ["Poppins_700Bold", "sans-serif"],
 			},
 		},

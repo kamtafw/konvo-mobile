@@ -7,7 +7,12 @@ export const getFriendsList = async () => {
 }
 
 export const getFriendRequests = async () => {
-	const response = await api.post(ENDPOINTS.LIST_REQUESTS)
+	const response = await api.get(ENDPOINTS.LIST_REQUESTS)
+	return response.data
+}
+
+export const getFriendSuggestions = async () => {
+	const response = await api.get(ENDPOINTS.LIST_SUGGESTIONS)
 	return response.data
 }
 

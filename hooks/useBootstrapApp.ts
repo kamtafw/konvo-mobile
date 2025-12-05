@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/stores/authStore"
+import { useFriendStore } from "@/stores/friendStore"
 import { useSettingsStore } from "@/stores/settingsStore"
 import { useEffect, useRef, useState } from "react"
 
@@ -18,7 +19,11 @@ export const useBootstrapApp = () => {
 			try {
 				console.log("🚀 Bootstrapping app...")
 
-				await Promise.all([useAuthStore.persist.rehydrate(), useSettingsStore.persist.rehydrate()])
+				await Promise.all([
+					useAuthStore.persist.rehydrate(),
+					useFriendStore.persist.rehydrate(),
+					useSettingsStore.persist.rehydrate(),
+				])
 
 				setReady(true)
 			} catch (err) {
