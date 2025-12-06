@@ -1,13 +1,17 @@
 import FloatingActionButton from "@/components/FloatingActionButton"
 import FriendsListModal from "@/components/FriendsListModal"
 import { useFriendStore } from "@/stores/friendStore"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { TextInput, View } from "react-native"
 
 export default function Chat() {
 	const friendsList = useFriendStore((state) => state.friendsList)
 
 	const [showFriendsList, setShowFriendsList] = useState(false)
+
+	useEffect(() => {
+		useFriendStore.getState().fetchFriendsList()
+	}, [])
 
 	const handleOpenFriendsList = useCallback(() => setShowFriendsList(true), [])
 	const handleCloseFriendsList = useCallback(() => setShowFriendsList(false), [])

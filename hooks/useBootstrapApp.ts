@@ -19,11 +19,27 @@ export const useBootstrapApp = () => {
 			try {
 				console.log("🚀 Bootstrapping app...")
 
+				// rehydrate stores in parallel
 				await Promise.all([
 					useAuthStore.persist.rehydrate(),
 					useFriendStore.persist.rehydrate(),
 					useSettingsStore.persist.rehydrate(),
 				])
+
+				// refresh token if it exists
+
+				// fetch data after refresh
+				const newAccessToken = useAuthStore.getState().access
+
+				if (newAccessToken) {
+					await Promise.all([
+						useFriendStore.getState().fetchFriendsList(),
+						useFriendStore.getState().fetchFriendRequests(),
+						useFriendStore.getState().fetchFriendSuggestions(),
+					])
+
+					// reconnect WebSockets
+				}
 
 				setReady(true)
 			} catch (err) {
@@ -35,6 +51,17 @@ export const useBootstrapApp = () => {
 
 		init()
 	}, [])
+
+	// separate effect to handle auth state changes
+	useEffect(() => {
+		if (!ready) return
+
+		if (isAuthenticated) {
+			// connect WebSockets
+		} else {
+			// disconnect WebSockets
+		}
+	}, [isAuthenticated, ready])
 
 	return { isAuthenticated, ready, error }
 }

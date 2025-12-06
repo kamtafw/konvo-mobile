@@ -128,7 +128,7 @@ export default function Login() {
 					{/* Footer */}
 					<View className="py-8 items-center">
 						<View className="flex-row">
-							<Text className="text-text text-base font-inter">Don't have an account? </Text>
+							<Text className="text-text text-base font-inter">Don&apos;t have an account? </Text>
 							<TouchableOpacity onPress={() => router.push({ pathname: "/signup" })}>
 								<Text className="text-text text-base font-inter-bold underline">Sign Up</Text>
 							</TouchableOpacity>

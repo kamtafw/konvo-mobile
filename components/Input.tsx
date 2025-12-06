@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons"
-import clsx from "clsx"
+import { clsx } from "clsx"
 import { cssInterop } from "nativewind"
 import { forwardRef } from "react"
 import { Text, TextInput, View } from "react-native"
@@ -30,5 +30,6 @@ const Input = forwardRef(({ value, onChange, onBlur, error, className, ...props 
 		</View>
 	)
 })
+Input.displayName = "Input"
 
 export default Input

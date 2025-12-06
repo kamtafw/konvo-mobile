@@ -2,9 +2,12 @@ import { LoginSchema, SignupSchema } from "@/lib/formSchema"
 import { TokenManager } from "@/lib/tokenManager"
 import * as authService from "@/services/authService"
 import { normalizeProfile } from "@/utils/normalizers"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import * as SecureStore from "expo-secure-store"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
+
+const getFriendStore = () => import("./friendStore").then((m) => m.useFriendStore)
 
 const SecureStorage = {
 	getItem: async (name: string) => {
@@ -71,10 +74,19 @@ export const useAuthStore = create(
 
 			refreshToken: async () => {},
 
-			logout: () => {
+			logout: async () => {
 				try {
 					TokenManager.clearTokens()
 					set({ profile: null, access: null, refresh: null, isAuthenticated: false })
+
+					const friendStore = await getFriendStore()
+
+					friendStore.getState().reset()
+
+					await Promise.all([
+						SecureStore.deleteItemAsync("auth-storage").catch(() => {}),
+						AsyncStorage.removeItem("friends-storage").catch(() => {}),
+					])
 
 					console.log(`✅ Logout complete, all storage cleared`)
 				} catch (error) {
