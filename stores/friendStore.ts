@@ -12,9 +12,6 @@ interface FriendState {
 	loadingFriendsList: boolean
 	loadingFriendRequests: boolean
 	loadingFriendSuggestions: boolean
-	loadingSendFriendRequest: boolean
-	loadingAcceptFriendRequest: boolean
-	loadingRejectFriendRequest: boolean
 
 	lastFetchedFriendsListAt: number | null
 	lastFetchedFriendRequestsAt: number | null
@@ -43,9 +40,6 @@ export const useFriendStore = create(
 			loadingFriendsList: false,
 			loadingFriendRequests: false,
 			loadingFriendSuggestions: false,
-			loadingSendFriendRequest: false,
-			loadingAcceptFriendRequest: false,
-			loadingRejectFriendRequest: false,
 
 			lastFetchedFriendsListAt: null,
 			lastFetchedFriendRequestsAt: null,
@@ -115,22 +109,19 @@ export const useFriendStore = create(
 				}
 			},
 			sendFriendRequest: async (userId) => {
-				set({ loadingSendFriendRequest: true, error: null })
+				set({ error: null })
 
 				try {
 					await friendService.sendFriendRequest(userId)
-					console.log("SENDING friend requests")
 					set((state) => ({
 						friendSuggestions: state.friendSuggestions.filter((friend) => friend.id !== userId),
 					}))
 				} catch (err: any) {
 					set({ error: err?.message || "Failed to send friend request" })
-				} finally {
-					set({ loadingSendFriendRequest: false })
 				}
 			},
 			acceptFriendRequest: async (requestId) => {
-				set({ loadingAcceptFriendRequest: true, error: null })
+				set({ error: null })
 				try {
 					await friendService.acceptFriendRequest(requestId)
 					set((state) => {
@@ -145,12 +136,10 @@ export const useFriendStore = create(
 					})
 				} catch (err: any) {
 					set({ error: err?.message || "Failed to accept friend request." })
-				} finally {
-					set({ loadingAcceptFriendRequest: false })
 				}
 			},
 			rejectFriendRequest: async (requestId) => {
-				set({ loadingRejectFriendRequest: true, error: null })
+				set({ error: null })
 				try {
 					await friendService.rejectFriendRequest(requestId)
 					set((state) => ({
@@ -158,8 +147,6 @@ export const useFriendStore = create(
 					}))
 				} catch (err: any) {
 					set({ error: err?.message || "Failed to reject friend request." })
-				} finally {
-					set({ loadingRejectFriendRequest: false })
 				}
 			},
 			reset: () => {
@@ -171,9 +158,6 @@ export const useFriendStore = create(
 					loadingFriendsList: false,
 					loadingFriendRequests: false,
 					loadingFriendSuggestions: false,
-					loadingSendFriendRequest: false,
-					loadingAcceptFriendRequest: false,
-					loadingRejectFriendRequest: false,
 
 					lastFetchedFriendsListAt: null,
 					lastFetchedFriendRequestsAt: null,
@@ -195,9 +179,6 @@ export const useFriendStore = create(
 				loadingFriendsList: state.loadingFriendsList,
 				loadingFriendRequests: state.loadingFriendRequests,
 				loadingFriendSuggestions: state.loadingFriendSuggestions,
-				loadingSendFriendRequest: state.loadingSendFriendRequest,
-				loadingAcceptFriendRequest: state.loadingAcceptFriendRequest,
-				loadingRejectFriendRequest: state.loadingRejectFriendRequest,
 
 				lastFetchedFriendsListAt: state.lastFetchedFriendsListAt,
 				lastFetchedFriendRequestsAt: state.lastFetchedFriendRequestsAt,

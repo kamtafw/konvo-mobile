@@ -33,3 +33,20 @@ export function normalizeFriendRequest(friendRequest: FriendRequestApiResponse):
 		created_at: friendRequest.created_at,
 	}
 }
+
+export function normalizeMessage(message: MessageApiResponse): Message {
+	return {
+		id: String(message.id),
+		sender: {
+			id: String(message.sender.id),
+			username: message.sender.username,
+			profile_picture: message.sender.profile_picture,
+		},
+		recipient_id: String(message.recipient),
+		temp_id: message.temp_id,
+		message: message.message,
+		timestamp: message.timestamp,
+		is_read: message.is_read,
+		status: "sent",
+	}
+}

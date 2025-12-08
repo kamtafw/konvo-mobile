@@ -4,8 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context"
 export default function Protected() {
 	return (
 		<SafeAreaView className="flex-1 bg-background" edges={["left", "right"]}>
-			<Stack>
+			<Stack screenOptions={{ headerShadowVisible: false, gestureEnabled: true }}>
 				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+				<Stack.Screen name="chat/[id]" />
 			</Stack>
 		</SafeAreaView>
 	)

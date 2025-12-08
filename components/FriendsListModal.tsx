@@ -1,4 +1,5 @@
 import { Image } from "expo-image"
+import { router } from "expo-router"
 import React, { useCallback, useMemo, useState } from "react"
 import { FlatList, Modal, Text, TextInput, TouchableOpacity, View } from "react-native"
 import FallbackAvatar from "./FallbackAvatar"
@@ -31,7 +32,9 @@ const FriendItem = React.memo<FriendItemProps>(({ friend, onProfilePress }) => {
 			)}
 			<View className="flex-1">
 				<Text className="text-lg font-poppins-semibold text-text-secondary">{friend.username}</Text>
-				<Text className="text-sm font-poppins text-muted">{friend.phone_number}</Text>
+				<Text className="text-sm font-poppins text-muted" numberOfLines={1}>
+					{friend.bio}
+				</Text>
 			</View>
 		</TouchableOpacity>
 	)
@@ -51,10 +54,14 @@ export default function FriendsListModal({ friends, showModal, onClose }: Friend
 			.sort((a, b) => a.username.localeCompare(b.username))
 	}, [friends, searchQuery])
 
-	const handleProfilePress = useCallback((friend: Profile) => {
-		console.log(`Tapped on ${friend.username}'s profile.`)
-	}, [])
+	const handleProfilePress = useCallback(
+		(friend: Profile) => {
+			router.push({ pathname: "/chat/[id]", params: { id: friend.id } })
 
+			onClose()
+		},
+		[onClose]
+	)
 	const handleClose = useCallback(() => {
 		onClose()
 		setSearchQuery(null)
@@ -80,7 +87,7 @@ export default function FriendsListModal({ friends, showModal, onClose }: Friend
 		<Modal visible={showModal} animationType="slide" onRequestClose={handleClose}>
 			<View className="flex-1 bg-background">
 				{/* Header */}
-				<View className="px-4 pt-8 pb-4">
+				<View className="px-8 pt-8 pb-4">
 					<Text className="text-xl text-tint font-poppins-semibold">Start a chat</Text>
 					<Text className="text-sm text-muted font-poppins">
 						{filteredFriends.length || 0} friend(s)

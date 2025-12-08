@@ -20,6 +20,8 @@ export const ENDPOINTS = {
 	REFRESH_TOKEN: "accounts/token/refresh/",
 	VERIFY_TOKEN: "accounts/token/verify/",
 
+	MESSAGE_HISTORY: (id: string) => `chat/${id}/`,
+
 	LIST_FRIENDS: "friends/",
 	SEND_REQUEST: "friends/request/",
 	LIST_REQUESTS: "friends/requests/",

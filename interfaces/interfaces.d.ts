@@ -29,6 +29,21 @@ interface FriendRequest {
 	created_at: string
 }
 
+interface Message {
+	id: string | null
+	message: string
+	sender: {
+		id: string
+		username: string
+		profile_picture: string | null
+	}
+	recipient_id: string
+	temp_id: string | null
+	timestamp: string
+	is_read: boolean
+	status: "sending" | "sent" | "failed"
+}
+
 // API Responses
 type ProfileApiResponse = {
 	id: number | string
@@ -51,4 +66,19 @@ type FriendRequestApiResponse = {
 	to_user: ProfileApiResponse
 	status: "pending" | "accepted" | "rejected"
 	created_at: string
+}
+
+type MessageApiResponse = {
+	id: number
+	sender: {
+		id: number
+		username: string
+		profile_picture: string | null
+	}
+	recipient: number
+	message: string
+	timestamp: string
+	is_read: boolean
+	temp_id: string
+	type?: string
 }

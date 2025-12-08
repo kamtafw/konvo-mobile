@@ -26,6 +26,9 @@ export default function Chat() {
 				/>
 			</View>
 
+			{/* Existing Chats */}
+			
+
 			{/* Floating Action Button */}
 			<FloatingActionButton onPress={handleOpenFriendsList} />
 

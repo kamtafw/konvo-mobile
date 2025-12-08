@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { Tabs } from "expo-router"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-export default function _Layout() {
+export default function Layout() {
 	const { top, bottom } = useSafeAreaInsets()
 	const { theme } = useTheme()
 

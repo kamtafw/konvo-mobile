@@ -32,7 +32,7 @@ export default function FallbackAvatar({ name, size = 12 }: { name: string; size
 			style={{ backgroundColor: bg }}
 			className={`w-${size} h-${size} rounded-full justify-center items-center`}
 		>
-			<Text className="text-white text-3xl font-poppins-semibold">{letter}</Text>
+			<Text className="text-white text-2xl font-poppins-semibold">{letter}</Text>
 		</View>
 	)
 }
