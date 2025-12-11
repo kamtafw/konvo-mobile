@@ -33,7 +33,7 @@ const FriendItem = React.memo<FriendItemProps>(({ friend, onProfilePress }) => {
 			<View className="flex-1">
 				<Text className="text-lg font-poppins-semibold text-text-secondary">{friend.username}</Text>
 				<Text className="text-sm font-poppins text-muted" numberOfLines={1}>
-					{friend.bio}
+					{friend.is_online ? "ONLINE" : "OFFLINE"}
 				</Text>
 			</View>
 		</TouchableOpacity>
@@ -62,6 +62,7 @@ export default function FriendsListModal({ friends, showModal, onClose }: Friend
 		},
 		[onClose]
 	)
+
 	const handleClose = useCallback(() => {
 		onClose()
 		setSearchQuery(null)
@@ -97,7 +98,7 @@ export default function FriendsListModal({ friends, showModal, onClose }: Friend
 				{/* Search Bar */}
 				<View className="px-4 pb-4">
 					<TextInput
-						className="px-4 py-3 rounded-full bg-surface text-text font-poppins"
+						className="px-4 py-3 rounded-full bg-surface text-text font-poppins placeholder:text-muted"
 						placeholder="Search friends..."
 						onChangeText={setSearchQuery}
 						autoCorrect={false}

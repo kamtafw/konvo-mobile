@@ -244,7 +244,7 @@ export default function Friends() {
 						{friendSuggestions.length > 0 && (
 							<View className="px-4 pb-4">
 								<TextInput
-									className="px-4 py-3 rounded-full bg-surface text-text font-poppins"
+									className="px-4 py-3 rounded-full bg-surface text-text font-poppins placeholder:text-muted"
 									placeholder="Search username..."
 									onChangeText={setSearchQuery}
 									autoCorrect={false}

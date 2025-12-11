@@ -12,6 +12,24 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { FlatList, KeyboardAvoidingView } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
+const formatLastSeen = (timestamp: string) => {
+	const date = new Date(timestamp)
+	const now = new Date()
+	const diff = now.getTime() - date.getTime()
+
+	const seconds = Math.floor(diff / 1000)
+	const minutes = Math.floor(seconds / 60)
+	const hours = Math.floor(minutes / 60)
+	const days = Math.floor(hours / 24)
+
+	if (minutes < 1) return "just now"
+	if (minutes < 60) return `${minutes}m ago`
+	if (hours < 24) return `${hours}h ago`
+	if (days < 7) return `${days}d ago`
+
+	return date.toLocaleDateString([], { month: "short", day: "numeric" })
+}
+
 export default function Chat() {
 	const { id: friendId } = useLocalSearchParams()
 
@@ -19,28 +37,20 @@ export default function Chat() {
 	const friend = friendsList.find((friend) => friend.id === friendId)
 
 	const user = useAuthStore((state) => state.profile)
-	// const userId = user?.id
 
 	const [messages, setMessages] = useState<Message[]>([])
 	const [inputText, setInputText] = useState("")
-	const [isConnected, setIsConnected] = useState(false)
 	const flatListRef = useRef<FlatList>(null)
 
 	// load message history on mount
 	useEffect(() => {
 		loadMessageHistory()
-		connectWebSocket()
-
-		return () => websocketManager.disconnect()
+		markMessagesRead()
 	}, [])
 
 	// subscribe to WebSocket events
 	useEffect(() => {
 		if (!friend) return
-
-		const unsubscribeConnection = websocketManager.on("connection", (data: any) => {
-			setIsConnected(data.status === "connected")
-		})
 
 		const unsubscribeMessage = websocketManager.on("chat_message", (data: MessageApiResponse) => {
 			const normalized = normalizeMessage(data)
@@ -58,7 +68,6 @@ export default function Chat() {
 		})
 
 		return () => {
-			unsubscribeConnection()
 			unsubscribeMessage()
 			unsubscribeMessageSent()
 			unsubscribeError()
@@ -80,6 +89,15 @@ export default function Chat() {
 			setMessages(normalized || [])
 		} catch (error) {
 			console.error("Failed to load message history:", error)
+		}
+	}
+
+	const markMessagesRead = async () => {
+		if (!friend) return
+		try {
+			await chatService.markMessagesRead(friend.id)
+		} catch (error) {
+			console.error("Failed to mark messages read:", error)
 		}
 	}
 
@@ -130,6 +148,7 @@ export default function Chat() {
 			if (exists) return prev
 			return [...prev, data]
 		})
+		markMessagesRead()
 
 		scrollToBottom()
 	}
@@ -166,7 +185,12 @@ export default function Chat() {
 			<Stack.Screen
 				options={{
 					header: () => (
-						<Title name={friend.username} uri={friend.profile_picture} isConnected={isConnected} />
+						<Title
+							name={friend.username}
+							uri={friend.profile_picture}
+							isOnline={friend.is_online}
+							lastSeen={formatLastSeen(friend.last_seen)}
+						/>
 					),
 				}}
 			/>

@@ -12,9 +12,9 @@ class WebSocketManager {
 	connect(token) {
 		const wsUrl = `ws://${ENDPOINTS.IPv4}:8000/ws/chat/?token=${token}`
 
-		this.ws = new WebSocket(wsUrl)
-		this.intentionallyClose = false
+		this.isIntentionallyClosed = false
 
+		this.ws = new WebSocket(wsUrl)
 
 		this.ws.onopen = () => {
 			console.log("✅ WebSocket connected")
@@ -25,7 +25,15 @@ class WebSocketManager {
 		this.ws.onmessage = (event) => {
 			try {
 				const data = JSON.parse(event.data)
-				console.log("📨 WebSocket message:", data)
+
+				if (data.type === "user_status") {
+					console.log("user_status:", data)
+					this.notifyListeners("user_status", {
+						userId: String(data.user_id),
+						isOnline: data.is_online,
+						timestamp: data.timestamp,
+					})
+				}
 
 				this.notifyListeners(data.type, data)
 			} catch (error) {
@@ -44,6 +52,8 @@ class WebSocketManager {
 
 			if (!this.isIntentionallyClosed) {
 				this.handleReconnect(token)
+			} else {
+				console.log("🛑 WebSocket intentionally closed, not reconnecting")
 			}
 		}
 	}
@@ -108,12 +118,16 @@ class WebSocketManager {
 	}
 
 	disconnect() {
-		this.intentionallyClose = true
+		this.isIntentionallyClosed = true
+		this.reconnectAttempts = 0
+
 		if (this.ws) {
 			this.ws.close()
 			this.ws = null
 		}
+
 		this.listeners.clear()
+		console.log('🔌 WebSocket disconnected intentionally');
 	}
 }
 

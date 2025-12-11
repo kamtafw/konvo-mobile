@@ -44,6 +44,25 @@ interface Message {
 	status: "sending" | "sent" | "failed"
 }
 
+interface Chat {
+	friend: {
+		id: string
+		username: string
+		profile_picture: string | null
+		is_online: boolean
+		last_seen: string
+	}
+	last_message: {
+		id: string
+		sender_id: string
+		recipient_id: string
+		message: string
+		timestamp: string
+		is_read: boolean
+	}
+	unread_count: number
+}
+
 // API Responses
 type ProfileApiResponse = {
 	id: number | string
@@ -81,4 +100,27 @@ type MessageApiResponse = {
 	is_read: boolean
 	temp_id: string
 	type?: string
+}
+
+type ChatApiResponse = {
+	friend: {
+		id: number
+		username: string
+		profile_picture: string | null
+		is_online: boolean
+		last_seen: string
+	}
+	last_message: {
+		id: number
+		sender: {
+			id: number
+			username: string
+			profile_picture: string | null
+		}
+		recipient: number
+		message: string
+		timestamp: string
+		is_read: boolean
+	}
+	unread_count: number
 }

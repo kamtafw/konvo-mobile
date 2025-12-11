@@ -1,6 +1,7 @@
 import { LoginSchema, SignupSchema } from "@/lib/formSchema"
 import { TokenManager } from "@/lib/tokenManager"
 import * as authService from "@/services/authService"
+import websocketManager from "@/services/websocketManager"
 import { normalizeProfile } from "@/utils/normalizers"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import * as SecureStore from "expo-secure-store"
@@ -76,17 +77,20 @@ export const useAuthStore = create(
 
 			logout: async () => {
 				try {
+					websocketManager.disconnect()
+					
 					TokenManager.clearTokens()
+					
 					set({ profile: null, access: null, refresh: null, isAuthenticated: false })
 
 					const friendStore = await getFriendStore()
-
 					friendStore.getState().reset()
 
 					await Promise.all([
 						SecureStore.deleteItemAsync("auth-storage").catch(() => {}),
 						AsyncStorage.removeItem("friends-storage").catch(() => {}),
 					])
+
 
 					console.log(`✅ Logout complete, all storage cleared`)
 				} catch (error) {

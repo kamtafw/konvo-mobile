@@ -1,4 +1,5 @@
 import * as friendService from "@/services/friendService"
+import websocketManager from "@/services/websocketManager"
 import { normalizeFriend, normalizeFriendRequest, normalizeProfile } from "@/utils/normalizers"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
@@ -26,6 +27,8 @@ interface FriendState {
 	sendFriendRequest: (userId: string) => Promise<void>
 	acceptFriendRequest: (requestId: string) => Promise<void>
 	rejectFriendRequest: (requestId: string) => Promise<void>
+	updateFriendStatus: (friendId: string, isOnline: boolean, timestamp: string) => void
+	subscribeToStatusUpdates: () => () => void
 
 	reset: () => void
 }
@@ -149,6 +152,22 @@ export const useFriendStore = create(
 					set({ error: err?.message || "Failed to reject friend request." })
 				}
 			},
+			updateFriendStatus: (friendId, isOnline, timestamp) => {
+				set((state) => ({
+					friendsList: state.friendsList.map((friend) =>
+						friend.id === friendId
+							? { ...friend, is_online: isOnline, last_seen: timestamp }
+							: friend
+					),
+				}))
+			},
+
+			subscribeToStatusUpdates: () => {
+				const unsubscribe = websocketManager.on("user_status", (data: any) => {
+					get().updateFriendStatus(String(data.user_id), data.is_online, data.timestamp)
+				})
+				return unsubscribe
+			},
 			reset: () => {
 				set({
 					friendsList: [],
@@ -193,6 +212,8 @@ export const useFriendStore = create(
 				sendFriendRequest: state.sendFriendRequest,
 				acceptFriendRequest: state.acceptFriendRequest,
 				rejectFriendRequest: state.rejectFriendRequest,
+				updateFriendStatus: state.updateFriendStatus,
+				subscribeToStatusUpdates: state.subscribeToStatusUpdates,
 				reset: state.reset,
 			}),
 			onRehydrateStorage: () => async (state) => {
@@ -204,8 +225,6 @@ export const useFriendStore = create(
 				if (!friendsList || friendsList.length === 0 || isStale) {
 					await state.fetchFriendsList?.({ force: false })
 				}
-
-				// set({ hydrated: true })
 			},
 		}
 	)

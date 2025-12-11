@@ -23,7 +23,15 @@ function getColorFromName(name: string) {
 	return COLORS[Math.abs(hash) % COLORS.length]
 }
 
-export default function FallbackAvatar({ name, size = 12 }: { name: string; size?: number }) {
+export default function FallbackAvatar({
+	name,
+	size = 12,
+	is_online = false,
+}: {
+	name: string
+	size?: number
+	is_online?: boolean
+}) {
 	const letter = name?.charAt(0)?.toUpperCase() || "?"
 	const bg = getColorFromName(name || "Unknown")
 

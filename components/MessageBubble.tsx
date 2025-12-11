@@ -22,7 +22,7 @@ const MessageBubble = React.memo<Props>(({ message, isMyMessage }) => {
 				isMyMessage ? "self-end bg-tint" : "self-start bg-surface"
 			)}
 		>
-			<Text className={clsx("text-base font-poppins", isMyMessage && "text-white")}>
+			<Text className={clsx("text-base font-poppins", isMyMessage ? "text-white" : "text-text")}>
 				{message.message}
 			</Text>
 			<Text

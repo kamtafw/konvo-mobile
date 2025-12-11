@@ -50,3 +50,24 @@ export function normalizeMessage(message: MessageApiResponse): Message {
 		status: "sent",
 	}
 }
+
+export function normalizeChat(chat: ChatApiResponse): Chat {
+	return {
+		friend: {
+			id: String(chat.friend.id),
+			username: chat.friend.username,
+			profile_picture: chat.friend.profile_picture,
+			is_online: Boolean(chat.friend.is_online),
+			last_seen: chat.friend.last_seen,
+		},
+		last_message: {
+			id: String(chat.last_message.id),
+			sender_id: String(chat.last_message.sender.id),
+			recipient_id: String(chat.last_message.recipient),
+			message: chat.last_message.message,
+			timestamp: chat.last_message.timestamp,
+			is_read: Boolean(chat.last_message.is_read),
+		},
+		unread_count: chat.unread_count,
+	}
+}
